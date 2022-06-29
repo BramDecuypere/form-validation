@@ -1,6 +1,7 @@
 import cn from "classnames";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
+import { useState } from "react";
 
 interface Props extends Omit<Partial<HTMLInputElement>, "id"> {
   register: any;
@@ -38,6 +39,7 @@ const today = format(new Date(), "yyyy-MM-dd");
 const FORM_URL = "/api/form";
 
 const Home = () => {
+  const [errors, setErrors] = useState([]);
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (formData: any) => {
@@ -49,15 +51,17 @@ const Home = () => {
 
     try {
       const res = await fetch(FORM_URL, requestOptions);
+      const body = await res.json();
 
       if (res.ok) {
         alert("We have successfuly saved your formdata");
       } else {
-        // Display the messages that went wrong
-        alert("Something went wrong");
+        alert("Failed to save form");
+        setErrors(body.errors ?? []);
       }
     } catch (err) {
-      alert("Something went wrong saving the data");
+      // Log to sentry if necessary
+      console.log("🚀 ~ file: index.tsx ~ line 70 ~ onSubmit ~ err", err);
     }
   };
 
@@ -113,6 +117,11 @@ const Home = () => {
                 </button>
               </div>
             </form>
+            <div className="text-red-500">
+              {errors.map((error: any, idx) => {
+                return <div key={idx}>{error.message}</div>;
+              })}
+            </div>
           </div>
         </div>
       </div>
