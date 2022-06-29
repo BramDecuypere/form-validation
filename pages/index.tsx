@@ -35,11 +35,23 @@ const FormItem = ({
 
 const today = format(new Date(), "yyyy-MM-dd");
 
+const FORM_URL = "/api/form";
+
 const Home = () => {
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = (formValue: any) => {
-    console.log("formValue", formValue);
+  const onSubmit = (formData: any) => {
+    console.log(
+      "🚀 ~ file: index.tsx ~ line 44 ~ onSubmit ~ formData",
+      formData
+    );
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    };
+
+    fetch(FORM_URL, requestOptions);
   };
 
   return (
