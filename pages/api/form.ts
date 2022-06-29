@@ -31,7 +31,7 @@ const formPostHandler = (
     const { error, value: data } = validate(req.body);
 
     if (error) {
-      res.status(400).json({ errors: errorMapper(error.details) });
+      return res.status(400).json({ errors: errorMapper(error.details) });
     }
 
     // Save to database code, at this point the formdata is validated...
