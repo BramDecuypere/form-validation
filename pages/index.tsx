@@ -40,18 +40,25 @@ const FORM_URL = "/api/form";
 const Home = () => {
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = (formData: any) => {
-    console.log(
-      "🚀 ~ file: index.tsx ~ line 44 ~ onSubmit ~ formData",
-      formData
-    );
+  const onSubmit = async (formData: any) => {
     const requestOptions = {
-      method: "PUT",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     };
 
-    fetch(FORM_URL, requestOptions);
+    try {
+      const res = await fetch(FORM_URL, requestOptions);
+
+      if (res.ok) {
+        alert("We have successfuly saved your formdata");
+      } else {
+        // Display the messages that went wrong
+        alert("Something went wrong");
+      }
+    } catch (err) {
+      alert("Something went wrong saving the data");
+    }
   };
 
   return (
