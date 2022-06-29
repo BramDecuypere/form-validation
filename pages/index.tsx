@@ -1,15 +1,19 @@
-import { FormEventHandler, HTMLInputTypeAttribute } from "react";
+import cn from "classnames";
 import { useForm } from "react-hook-form";
+import { format } from "date-fns";
+
+interface Props extends Omit<Partial<HTMLInputElement>, "id"> {
+  register: any;
+  name: string;
+}
 
 const FormItem = ({
   register,
   name,
   type = "text",
-}: {
-  register: any;
-  name: string;
-  type?: HTMLInputTypeAttribute | undefined;
-}) => {
+  className,
+  ...props
+}: Props) => {
   return (
     <>
       <label htmlFor={name} className="block text-sm font-medium text-gray-700">
@@ -18,12 +22,18 @@ const FormItem = ({
       <input
         id={name}
         type={type}
-        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        className={cn(
+          "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+          className
+        )}
+        {...props}
         {...register(name)}
       />
     </>
   );
 };
+
+const today = format(new Date(), "yyyy-MM-dd");
 
 const Home = () => {
   const { register, handleSubmit } = useForm();
@@ -42,11 +52,38 @@ const Home = () => {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-              <FormItem register={register} name={"firstName"} />
+              <FormItem
+                defaultValue="Bram"
+                register={register}
+                name={"firstName"}
+              />
 
-              <FormItem register={register} name={"lastName"} />
+              <FormItem
+                defaultValue="Decuypere"
+                register={register}
+                name={"lastName"}
+              />
 
-              <FormItem register={register} name={"email"} type={"email"} />
+              <FormItem
+                defaultValue="bram@growmyflow.com"
+                register={register}
+                name={"email"}
+                type={"email"}
+              />
+
+              <FormItem
+                defaultValue={"5"}
+                register={register}
+                name={"amountOfJournalPrompts"}
+                type={"number"}
+              />
+
+              <FormItem
+                defaultValue={today}
+                register={register}
+                name={"journalDate"}
+                type={"date"}
+              />
 
               <div>
                 <button
